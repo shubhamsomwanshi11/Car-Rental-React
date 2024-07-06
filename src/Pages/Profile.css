@@ -1,0 +1,88 @@
+.profile-container {
+  margin-top: 120px; /* Ensure spacing above the form */
+}
+
+.profile-form {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-form h2 {
+  margin-top: 100px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 28px; /* Adjusted font size in pixels */
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #555;
+  font-size: 16px; /* Adjusted font size in pixels */
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px; /* Adjusted font size in pixels */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.form-group input[type='file'] {
+  padding: 5px;
+}
+
+.form-group select {
+  appearance: none; /* Remove default styling for select */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: url('data:image/svg+xml;utf8,<svg fill="%23555" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 12l-5-5 1.5-1.5L10 9l3.5-3.5L15 7z"/></svg>') no-repeat right 8px center;
+  background-size: 10px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+button[type='submit'] {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px; /* Adjusted font size in pixels */
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button[type='submit']:hover {
+  background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  .profile-form {
+    padding: 15px;
+  }
+
+  .form-group input,
+  .form-group select {
+    padding: 6px;
+    font-size: 14px; /* Adjusted font size in pixels */
+  }
+
+  button[type='submit'] {
+    padding: 8px 16px;
+    font-size: 14px; /* Adjusted font size in pixels */
+  }
+}

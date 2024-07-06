@@ -1,0 +1,79 @@
+/* CarData.css */
+
+.car-data-container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 20px;
+}
+
+.car-item {
+    margin-top: 100px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s;
+}
+
+.car-item:hover {
+    transform: scale(1.05);
+}
+
+.car-image {
+    width: 100%;
+    max-height: 200px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+p {
+    margin: 5px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+strong {
+    color: #222;
+}
+
+@media (max-width: 768px) {
+    .car-data-container {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    }
+
+    .car-item {
+        margin-top: 50px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    p {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .car-data-container {
+        grid-template-columns: 1fr;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    p {
+        font-size: 12px;
+    }
+}
