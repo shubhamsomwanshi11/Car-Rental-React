@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 import './Cardata.css';
 import { useContext } from 'react';
 import { userContext } from '../context/userContext'
@@ -29,7 +30,7 @@ const buttonStyle = {
 const Car = ({ carData }) => {
     const { currentUser } = useContext(userContext);
     const token = currentUser?.token;
-   
+
     return (
         <div className="car-item">
             <img src={carData.img} alt={carData.model} className="car-image" />
@@ -54,9 +55,9 @@ const Car = ({ carData }) => {
                         )}
                     </Popup>
                 )}
-                <button type="button" style={{ ...buttonStyle, backgroundColor: 'skyblue' }}>
+                <Link to={`/cars/${carData._id}`} style={{ ...buttonStyle, backgroundColor: 'skyblue' }} >
                     View Details
-                </button>
+                </Link>
             </div>
         </div >
     )

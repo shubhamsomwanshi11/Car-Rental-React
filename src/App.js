@@ -13,6 +13,7 @@ import Layout from './components/Layout'
 import UserProvider from './context/userContext'
 import CarBooking from "./Pages/CarBooking";
 import Cars from "./Pages/Cars";
+import CarDetailsPage from "./Pages/CarDetails.jsx";
 
 
 const router = createBrowserRouter([
@@ -31,6 +32,7 @@ const router = createBrowserRouter([
       { path: "car-bookings", element: < CarBooking /> },
       { path: "history", element: < BookingHistory /> },
       { path: "cars", element: < Cars /> },
+      { path: "cars/:id", element: < CarDetailsPage /> },
     ]
   }
 ])

@@ -1,0 +1,260 @@
+/* CarDetails specific styles */
+.car-details-container {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.car-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.last-info {
+  margin-bottom: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.book-button {
+  display: flex;
+  justify-content: center;
+  width: 50%;
+  flex-direction: row;
+  align-items: center;
+}
+
+.car-image-container {
+  text-align: center;
+  padding: 30px;
+}
+
+.car-image {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.car-details-content,
+.owner-details-content {
+  flex: 2;
+  padding: 20px;
+}
+
+.car-category {
+  font-size: 2.5rem;
+}
+
+.car-details-header {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 28px;
+  /* Adjusted font size in pixels */
+  color: #333;
+}
+
+.car-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-top: 12px;
+  gap: 20px;
+}
+
+.car-detail-item {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  /* Adjusted font size in pixels */
+  color: #555;
+}
+
+.car-detail-item svg {
+  margin-right: 10px;
+  color: #007bff;
+}
+
+.car-includes h4 {
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+.car-includes ul {
+  list-style: none;
+  padding: 0;
+}
+
+.car-include-item {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.car-include-item svg {
+  margin-right: 8px;
+  color: green;
+}
+
+.car-rating {
+  margin-top: 20px;
+  font-size: 18px;
+  color: #555;
+}
+
+.car-rating svg {
+  margin-right: 8px;
+  color: gold;
+}
+
+.owner-card {
+  display: flex;
+  justify-content: space-between;
+}
+
+.owner-card img {
+  margin: auto;
+  width: 70px;
+  height: 70px;
+  border: 2px solid#ccc;
+  border-radius: 50%;
+  margin-right: 30px;
+}
+
+.owner-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.owner-details {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+  border-top: 1px solid #ccc;
+}
+
+.owner-details-content {
+  flex: 2;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.owner-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+}
+
+.owner-detail-item {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  /* Adjusted font size in pixels */
+  color: #555;
+}
+
+.owner-detail-item svg {
+  margin-right: 20px;
+  color: #007bff;
+}
+
+
+.book-now-button {
+  background-color: #ff0000;
+  color: white;
+  padding: 30px 30px;
+  width: 70%;
+  border: 5px;
+  border-radius: 10px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.price {
+  margin-top: 5px;
+  font-size: 34px;
+  color: green;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.car-detail-item.price svg {
+  margin-right: 5px;
+  /* Adjust spacing between ₹ symbol and price */
+}
+
+.book-now-button:hover {
+  background-color: #cc0000;
+  /* Darker red on hover */
+}
+
+@media (max-width: 768px) {
+
+  .car-details {
+    grid-template-columns: 1fr;
+    margin-top: 10px;
+  }
+
+  .car-details-header {
+    font-size: 24px;
+    /* Adjusted font size in pixels */
+  }
+
+  .car-detail-item {
+    font-size: 16px;
+    /* Adjusted font size in pixels */
+  }
+
+  .car-include-item {
+    font-size: 14px;
+  }
+
+  .car-rating {
+    font-size: 16px;
+  }
+
+  .owner-detail-item {
+    font-size: 16px;
+    /* Adjusted font size in pixels */
+  }
+
+  .book-now-button {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .car-image-container {
+    padding: 20px;
+    /* Adjusted padding for smaller screens */
+  }
+
+  .car-detail-item.price {
+    font-size: 28px;
+    /* Adjusted font size for price on smaller screens */
+  }
+}
+
+/* CarDetails specific styles */
+.car-details-container {
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  width: 100%;
+}
