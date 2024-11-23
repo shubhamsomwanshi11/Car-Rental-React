@@ -1,19 +1,21 @@
 import { useContext, useState } from "react";
 import { userContext } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 
 function BookCar({ carData }) {
+  const navigate = useNavigate();
   const { currentUser } = useContext(userContext);
   const token = currentUser?.token;
   const [formData, setFormData] = useState({
     car: carData._id,
     owner: carData.owner,
-    destination: 'Kolhapur',
-    pickUp: '2024-07-08',
-    drop: '2024-07-09',
-    pickUpTime: '10:00 AM',
-    dropTime: '12:00 PM',
+    destination: '',
+    pickUp: '',
+    drop: '',
+    pickUpTime: '',
+    dropTime: '',
     transactionId: ''
   });
 
@@ -78,11 +80,25 @@ function BookCar({ carData }) {
 
     if (await validateForm()) {
       try {
+        const moment = require('moment');
+        const pickUpDateTime = moment(`${formData.pickUp}T${formData.pickUpTime}`, 'YYYY-MM-DDTHH:mm');
+        const dropDateTime = moment(`${formData.drop}T${formData.dropTime}`, 'YYYY-MM-DDTHH:mm');
+
+        // Calculate the rental duration in hours
+        const rentalDuration = dropDateTime.diff(pickUpDateTime, 'hours');
+        if (rentalDuration <= 0) {
+          toast.error("Drop-off time must be after pick-up time.");
+          return;
+        }
+
+        // Calculate the total amount (hours * price per hour)
+        const dynamicAmount = rentalDuration * parseFloat(carData.price) * 100; // Multiply by 100 for paise
+
         // Create order
         const response = await fetch(`${process.env.REACT_APP_BASE_URL}payment/create`, {
           method: "POST",
           body: JSON.stringify({
-            amount,
+            amount: dynamicAmount,
             currency,
             receipt: receiptId,
           }),
@@ -95,7 +111,7 @@ function BookCar({ carData }) {
 
         const options = {
           key: "rzp_test_NtRrXpF4ViPkMH",
-          amount: amount,
+          amount: dynamicAmount,
           currency: currency,
           name: "Car Rental",
           description: "This is the payment.",
@@ -107,7 +123,7 @@ function BookCar({ carData }) {
             if (response.razorpay_payment_id) {
               const updatedFormData = {
                 ...formData,
-                transactionId: response.razorpay_payment_id
+                transactionId: response.razorpay_payment_id,
               };
               setFormData(updatedFormData);
               confirmBooking(updatedFormData);
@@ -145,6 +161,7 @@ function BookCar({ carData }) {
       }
     }
   };
+
 
   const confirmBooking = async (updatedFormData) => {
     console.log(updatedFormData);

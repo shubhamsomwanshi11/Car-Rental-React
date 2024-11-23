@@ -116,6 +116,7 @@ const Login = () => {
           </div>
           <button type="submit" style={styles.button}>Login</button>
         </form>
+        <p style={{paddingTop:'12px',textAlign:'center'}}>Don't have an account ? <a style={{color:'green'}} href="/register">Register</a></p>
       </div>
       <ToastContainer position="bottom-left" />
 

@@ -50,14 +50,14 @@ const CarDetailsPage = () => {
             <div className="car-details-content">
               <h1 className='car-category'> {car.modelName} {car.year}</h1>
               <div className="car-details">
-                <div className="car-detail-item"><FaUser /> {car.seats}</div>
+                <div className="car-detail-item"><FaUser /> {car.mark}</div>
                 <div className="car-detail-item"><FaCar /> {car.doors} doors</div>
-                <div className="car-detail-item"><FaTachometerAlt /> {car.mileage}</div> {/* Corrected carDetails to car */}
+                <div className="car-detail-item"><FaTachometerAlt /> {car.modelName}</div> {/* Corrected carDetails to car */}
                 <div className="car-detail-item"><FaGasPump /> {car.fuel}</div>
                 <div className="car-detail-item"><FaSnowflake /> {car.air}</div>
                 <div className="car-detail-item"><GiGearStickPattern /> {car.transmission} Transmission</div>
               </div>
-              <div className="price"> ₹{car.price}</div>
+              <div className="price"> ₹ {car.price} per hour</div>
             </div>
           </div>
           <div className="last-info">

@@ -19,6 +19,9 @@ const Register = () => {
     age: '',
   });
 
+  const [verified, setVerified] = useState(false);
+  const [showVerify, setShowVerified] = useState(false);
+  const [otp, setOTP] = useState();
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(1);
@@ -33,9 +36,18 @@ const Register = () => {
       setErrors({ ...errors, age: '' });
     }
 
-    if (type === 'file') {
-      setFormData({ ...formData, [name]: files[0] });
-    } else {
+    if (name === 'avatar') {
+      const file = files[0];
+      if (file.size > 2 * 1024 * 1024) { // Limit to 2MB
+        setErrors({ ...errors, avatar: 'File size must be under 2MB' });
+      } else if (!['image/jpeg', 'image/png'].includes(file.type)) {
+        setErrors({ ...errors, avatar: 'Only JPEG or PNG files are allowed' });
+      } else {
+        setErrors({ ...errors, avatar: '' });
+        setFormData({ ...formData, avatar: file });
+      }
+    }
+    else {
       setFormData({ ...formData, [name]: value });
     }
   };
@@ -75,6 +87,35 @@ const Register = () => {
       }
     }
   };
+
+  const handleMailVerification = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BASE_URL}email/verifyOTP`, { email: formData.email, otp });
+      if (response.status === 200) {
+        toast.success('Email verified successfully.');
+        setVerified(true);
+        setShowVerified(true);
+      } else {
+        toast.error(response.data.message || 'Failed to verify email.');
+      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'An error occurred.');
+    }
+  };
+
+
+  const sendOTP = async (e) => {
+    e.preventDefault();
+    const response = await axios.post(`${process.env.REACT_APP_BASE_URL}email/sendOTP`, { email: formData.email });
+    if (response.status == '201') {
+      setShowVerified(true);
+      toast.success('Email Sent Successfully.');
+    }
+    else {
+      toast.error('An error occured.');
+    }
+  }
 
   const handleBack = () => {
     setStep(1);
@@ -134,6 +175,18 @@ const Register = () => {
       cursor: 'pointer',
       fontSize: '18px',
       marginTop: '10px',
+    },
+    buttonV: {
+      width: '50%',
+      marginLeft: '10px',
+      marginTop: '30px',
+      height: '45px',
+      backgroundColor: '#007bff',
+      color: 'white',
+      border: 'none',
+      borderRadius: '4px',
+      cursor: 'pointer',
+      fontSize: '18px'
     },
     buttonSecondary: {
       width: '100%',
@@ -197,7 +250,6 @@ const Register = () => {
     } catch (err) {
       toast.error(err.response?.data?.message || 'An error occurred');
     }
-
   };
 
   if (isLoading) return <Loader />
@@ -208,7 +260,44 @@ const Register = () => {
         <form onSubmit={handleSubmit}>
           {step === 1 && (
             <>
-              {['name', 'email', 'mobile', 'age'].map((field) => (
+              {['name', 'email'].map((field) => (
+                <div className="form-group" style={styles.formGroup} key={field}>
+                  <label htmlFor={field} style={styles.label}>
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                  </label>
+                  <input
+                    type="text"
+                    id={field}
+                    name={field}
+                    value={formData[field]}
+                    onChange={handleChange}
+                    style={styles.input}
+                    disabled={field === 'email' && verified} // Disable email field if verified is true
+                  />
+                  {errors[field] && <p style={styles.error}>{errors[field]}</p>}
+                </div>
+              ))}
+
+              {
+                !showVerify && <button style={{ ...styles.buttonV, marginTop: '0px', marginBottom: '20px' }} onClick={sendOTP} >Verify Mail</button>
+              }
+
+              {!verified && showVerify && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+                <div className='form-group'>
+                  <label style={styles.label}>
+                    Enter OTP :
+                  </label>
+                  <input
+                    type="text"
+                    style={styles.input}
+                    onChange={(e) => setOTP(e.target.value)}
+                    placeholder="Enter OTP"
+                  />
+                </div>
+                <button style={styles.buttonV} onClick={handleMailVerification} >Verify Mail</button>
+              </div>}
+
+              {['mobile', 'age'].map((field) => (
                 <div className="form-group" style={styles.formGroup} key={field}>
                   <label htmlFor={field} style={styles.label}>
                     {field.charAt(0).toUpperCase() + field.slice(1)}
@@ -224,9 +313,9 @@ const Register = () => {
                   {errors[field] && <p style={styles.error}>{errors[field]}</p>}
                 </div>
               ))}
-              <button type="button" style={styles.button} onClick={handleNext}>
+              {verified && <button type="button" style={styles.button} onClick={handleNext}>
                 Next
-              </button>
+              </button>}
             </>
           )}
           {step === 2 && (
@@ -269,10 +358,11 @@ const Register = () => {
             </>
           )}
         </form>
+        <p style={{ paddingTop: '12px', textAlign: 'center' }}>Already have an account ? <a style={{ color: 'green' }} href="/login">Login</a></p>
       </div>
       <ToastContainer />
 
-    </div>
+    </div >
   );
 };
 
