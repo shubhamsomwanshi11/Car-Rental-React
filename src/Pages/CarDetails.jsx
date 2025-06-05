@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { FaCheckCircle, FaUser, FaCar, FaGasPump, FaCalendarAlt, FaTachometerAlt, FaSnowflake, FaCog, FaCalendarCheck, FaMoneyBillWave, FaShieldAlt, FaExclamationTriangle, FaInfoCircle, FaStar, FaPhone, FaEnvelope, FaArrowLeft } from 'react-icons/fa';
-import Popup from 'reactjs-popup';
-import BookCar from '../components/BookCar';
-import { GiGearStickPattern } from 'react-icons/gi';
-import HeroPages from '../components/HeroPages';
-import Loader from '../components/Loader';
-import './cardetails.css';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import {
+  FaUser, FaCar, FaGasPump, FaTachometerAlt,
+  FaSnowflake, FaPhone, FaEnvelope
+} from 'react-icons/fa';
+import { GiGearStickPattern } from 'react-icons/gi';
+import HeroPages from '../components/HeroPages';
+import Popup from 'reactjs-popup';
+import BookCar from '../components/BookCar';
+import Loader from '../components/Loader';
+import AboutMain from "../images/about/about-main.jpg";
+import PlanTrip from '../components/PlanTrip';
+import './cardetails.css';
 
 const CarDetailsPage = () => {
   const { id } = useParams();
@@ -16,54 +21,56 @@ const CarDetailsPage = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchCarData = async () => {
       setLoading(true);
       try {
-        const carData = await axios.get(`${process.env.REACT_APP_BASE_URL}cars/${id}`);
-        if (carData.data) {
-          setCar(carData.data);
-          const ownerData = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${carData.data.owner}`);
-          if (ownerData.data) setOwner(ownerData.data);
+        const carRes = await axios.get(`${process.env.REACT_APP_BASE_URL}cars/${id}`);
+        if (carRes.data) {
+          setCar(carRes.data);
+          const ownerRes = await axios.get(`${process.env.REACT_APP_BASE_URL}users/${carRes.data.owner}`);
+          if (ownerRes.data) setOwner(ownerRes.data);
         }
       } catch (error) {
-        console.log(error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchCars();
+    fetchCarData();
   }, [id]);
 
   if (loading) return <Loader />;
-  if (!car) return <div>No car data available</div>;
-  if (!owner) return <div>No owner data available</div>;
+  if (!car || !owner) return <div className="text-center py-10">Data not available.</div>;
 
   return (
-    <section className="models-section">
-      <HeroPages name="Car Name" />
-      <div className="container">
-        <div className="car-details-container">
-          <div className="car-card">
-            <div className="car-image-container">
-              <img src={car.img} alt={car.modelName} className="car-image" />
-            </div>
-            <div className="car-details-content">
-              <h1 className='car-category'> {car.modelName} {car.year}</h1>
+    <>
+      <section className="about-page">
+        <HeroPages name={car.modelName} />
+        <div className="container">
+          <div className="about-main">
+            <img className="about-main__img" src={car.img || AboutMain} alt="car" />
+            <div className="about-main__text">
+             
+           <p>
+  {car.modelName} ({car.year}) by {car.mark}, features {car.doors} doors, runs on {car.fuel.toLowerCase()} fuel with {car.transmission.toLowerCase()} transmission, includes {car.air.toLowerCase() === 'yes' ? 'air conditioning' : 'no air conditioning'}, available at ₹{car.price} per hour.
+</p>
+
+
+
               <div className="car-details">
-                <div className="car-detail-item"><FaUser /> {car.mark}</div>
-                <div className="car-detail-item"><FaCar /> {car.doors} doors</div>
-                <div className="car-detail-item"><FaTachometerAlt /> {car.modelName}</div> {/* Corrected carDetails to car */}
+                <div className="car-detail-item"><FaCar /> {car.doors} Doors</div>
+                <div className="car-detail-item"><FaTachometerAlt /> {car.modelName}</div>
                 <div className="car-detail-item"><FaGasPump /> {car.fuel}</div>
                 <div className="car-detail-item"><FaSnowflake /> {car.air}</div>
-                <div className="car-detail-item"><GiGearStickPattern /> {car.transmission} Transmission</div>
+                <div className="car-detail-item"><GiGearStickPattern /> {car.transmission}</div>
+                  <div className="car-detail-item">₹ {car.price} per hour</div>
               </div>
-              <div className="price"> ₹ {car.price} per hour</div>
-            </div>
-          </div>
-          <div className="last-info">
-            <div className="owner-details-content">
-              <h3>Owner Details</h3>
-              <div className="owner-info">
+
+            
+             
+
+              <div className="owner-details mt-8">
+                <h3>Owner Details</h3>
                 <div className="owner-card">
                   <div className="owner-image-container">
                     <img src={owner.avatar} alt="Owner" className="owner-image" />
@@ -77,24 +84,13 @@ const CarDetailsPage = () => {
                 </div>
               </div>
             </div>
-            <div className='book-button'>
-              <Popup
-                trigger={<button className='book-now-button'>Book Now</button>} // Corrected class to className
-                modal
-                nested
-              >
-                {(close) => (
-                  <div className="popup-content">
-                    <button className="close-popup" onClick={close}>&times;</button>
-                    <BookCar carData={car} />
-                  </div>
-                )}
-              </Popup>
-            </div>
           </div>
         </div>
-      </div>
-    </section>
+      <PlanTrip />
+
+         
+      </section>
+    </>
   );
 };
 

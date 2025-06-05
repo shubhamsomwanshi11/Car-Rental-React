@@ -1,64 +1,55 @@
+import React, { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import HeroPages from "../components/HeroPages";
-import Car from '../components/Car'
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import axios from "axios";
-import Loader from '../components/Loader'
+import Car from "../components/Car";  // Import the Car component
 
 function Models() {
-    const [cars, setCars] = useState(null)
-    const [isLoading, setIsLoading] = useState(false);
-    useEffect(() => {
-        const fetchPost = async () => {
-            setIsLoading(true); // Start loading
+  const [cars, setCars] = useState([]);
 
-            try {
-                const response = await axios.get(`${process.env.REACT_APP_BASE_URL}cars/`);
-                setCars(response.data);
-            } catch (err) {
-                toast.error(err.response.data.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/cars`);
+        setCars(response.data);
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+      }
+    };
 
-        fetchPost();
+    fetchCars();
+  }, []);
 
-    }, []);
 
-    if (isLoading) return <Loader />
-    return (
-        <>
-            <section className="models-section">
-                <HeroPages name="Available Cars" />
-                <div className="container">
-                    <div className="car-data-container">
-                        {cars && cars.length ? (
-                            cars.map((car) => (
-                                <Car key={car._id} carData={car} />
-                            ))
-                        ) : (
-                            <h2>No cars Available</h2>
-                        )}
-
-                    </div>
-                </div>
-                <div className="book-banner">
-                    <div className="book-banner__overlay"></div>
-                    <div className="container">
-                        <div className="text-content">
-                            <h2 style={{color:"white"}}>Book a car by getting in touch with us</h2>
-                            <span>
-                                <i className="fa-solid fa-phone"></i>
-                                <h3>(123) 456-7869</h3>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </>
-    );
+  return (
+    <>
+      <section className="models-section">
+        <HeroPages name="Vehicle Models" />
+        <div className="container">
+          <div className="models-div">
+            {cars.map((car) => (
+              <Car key={car._id} carData={car} />
+            ))}
+          </div>
+        </div>
+               
+        <div className="book-banner">
+          <div className="book-banner__overlay"></div>
+          <div className="container">
+            <div className="text-content">
+              <h2>Book a car by getting in touch with us</h2>
+              <span>
+                <i className="fa-solid fa-phone"></i>
+                <h3>9763514611</h3>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+      {/* Add footer if needed */}
+      {/* <Footer /> */}
+    </>
+  );
 }
 
 export default Models;
