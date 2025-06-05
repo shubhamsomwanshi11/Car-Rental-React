@@ -10,7 +10,7 @@ function Models() {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/api/cars");
+        const response = await axios.get(`${process.env.REACT_APP_BASE_URL}/cars`);
         setCars(response.data);
       } catch (error) {
         console.error("Error fetching cars:", error);
@@ -19,6 +19,7 @@ function Models() {
 
     fetchCars();
   }, []);
+
 
   return (
     <>
