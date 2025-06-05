@@ -1,4 +1,6 @@
 import "../src/dist/styles.css";
+
+
 import About from "./Pages/About";
 import Home from "./Pages/Home";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -31,8 +33,9 @@ const router = createBrowserRouter([
       { path: "logout", element: < Logout /> },
       { path: "car-bookings", element: < CarBooking /> },
       { path: "history", element: < BookingHistory /> },
-      { path: "cars", element: < Cars /> },
+      
       { path: "cars/:id", element: < CarDetailsPage /> },
+      
     ]
   }
 ])

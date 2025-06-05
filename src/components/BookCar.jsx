@@ -194,7 +194,7 @@ function BookCar({ carData }) {
   return (
     <>
       <section id="booking-section" className="book-section">
-        <div className="container">
+       
           <div className="book-content">
             <div className="book-content__box">
               <h2>Book a car</h2>
@@ -283,7 +283,7 @@ function BookCar({ carData }) {
               </button>
             </div>
           </div>
-        </div>
+        
         <ToastContainer />
       </section>
     </>

@@ -180,13 +180,7 @@
   transition: background-color 0.3s ease;
 }
 
-.price {
-  margin-top: 5px;
-  font-size: 34px;
-  color: green;
-  margin-top: 10px;
-  font-weight: bold;
-}
+
 
 .car-detail-item.price svg {
   margin-right: 5px;
@@ -239,7 +233,7 @@
   }
 
   .car-detail-item.price {
-    font-size: 28px;
+    font-size: 25px;
     /* Adjusted font size for price on smaller screens */
   }
 }

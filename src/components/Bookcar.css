@@ -21,7 +21,3 @@
     width: 40px; /* Set width for the button */
     height: 40px; /* Set height for the button */
 }
-
-.close-popup:hover {
-    color: red; /* Change color on hover */
-}
