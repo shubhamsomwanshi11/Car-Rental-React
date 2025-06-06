@@ -1,0 +1,36 @@
+.add-car-form {
+  .form-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 0.5rem;
+
+    .form-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.5rem;
+
+    label {
+    
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+
+    
+    }
+
+    input {
+      background-color: #f2f2f2;
+      padding: 1rem 2rem;
+     
+      border: none;
+      outline: none;
+      border-radius: 0.3rem;
+    }
+  }
+}

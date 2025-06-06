@@ -1,309 +1,329 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { FaCloudUploadAlt } from 'react-icons/fa';
 import HeroPages from "../components/HeroPages";
-import Loader from '../components/Loader'
+import Loader from '../components/Loader';
 import { ToastContainer, toast } from 'react-toastify';
 import axios from 'axios';
 import { userContext } from '../context/userContext';
 import { useNavigate } from 'react-router-dom';
-
+import '../styles/AddCar/AddCar.scss';
 const AddCar = () => {
-    const [carInfo, setCarInfo] = useState({
+  const [carInfo, setCarInfo] = useState({
+    modelName: '',
+    year: '',
+    color: '',
+    price: '',
+    mileage: '',
+    name: '',
+    mark: '',
+    doors: '',
+    air: '',
+    transmission: '',
+    fuel: '',
+  });
+
+  const { currentUser } = useContext(userContext);
+  const token = currentUser?.token;
+  const navigate = useNavigate();
+
+  const [photo, setPhoto] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!token) {
+      setTimeout(() => {
+        toast.error("Unauthorized.");
+        navigate('/login');
+      }, 1500);
+    }
+  }, [token, navigate]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setCarInfo(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePhotoUpload = (e) => {
+    const file = e.target.files[0];
+    setPhoto(file);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const requiredFields = ['name', 'price', 'modelName', 'mark', 'year', 'doors', 'air', 'transmission', 'fuel'];
+    for (let field of requiredFields) {
+      if (!carInfo[field]) {
+        toast.error("Please fill in all fields.");
+        return;
+      }
+    }
+    if (!photo) {
+      toast.error("Please upload a car image.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const formData = new FormData();
+      for (let key in carInfo) {
+        formData.append(key, carInfo[key]);
+      }
+      formData.append('img', photo);
+
+      await axios.post(`${process.env.REACT_APP_BASE_URL}cars/register`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      setCarInfo({
         modelName: '',
         year: '',
         color: '',
         price: '',
         mileage: '',
         name: '',
+        mark: '',
         doors: '',
         air: '',
         transmission: '',
         fuel: '',
-    });
-    const { currentUser } = useContext(userContext);
-    const token = currentUser?.token;
-    const navigate = useNavigate();
+      });
+      setPhoto(null);
+      toast.success("Car registered successfully.");
+      navigate('/');
+    } catch (err) {
+      toast.error("An error occurred.");
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    useEffect(() => {
-        if (!token) {
-            setTimeout(() => {
-                toast.error("Unauthorized.");
-                navigate('/login');
-            }, 1500);
-        }
-    }, [token, navigate]);
+  if (isLoading) return <Loader />;
 
-    const [photo, setPhoto] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+  return (
+    <section className="contact-page">
+      <HeroPages name="Add Car" />
+      <div className="container">
+        <div className="contact-div">
+          <div className="contact-div__text">
+            <h2>Want to list your car?</h2>
+            <p>
+              Please provide all necessary car details and upload an image. Ensure the data is accurate for the best experience.
+            </p>
+            <a href="/"><i className="fa-solid fa-phone"></i>&nbsp; (123) 456-7869</a>
+            <a href="/"><i className="fa-solid fa-envelope"></i>&nbsp; support@carrental.com</a>
+            <a href="/"><i className="fa-solid fa-location-dot"></i>&nbsp; Pune, India</a>
+          </div>
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setCarInfo(prevState => ({
-            ...prevState,
-            [name]: value,
-        }));
-    };
+          <div className="contact-div__form">
+            <form onSubmit={handleSubmit} className="add-car-form">
 
-    const handlePhotoUpload = (e) => {
-        const file = e.target.files[0];
-        setPhoto(file);
-    };
+              {/* Row 1 */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="name">Name <b>*</b></label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={carInfo.name}
+                    onChange={handleChange}
+                    placeholder="Enter name"
+                    required
+                  />
+                </div>
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+                <div className="form-group">
+                  <label htmlFor="mark">Mark <b>*</b></label>
+                  <input
+                    type="text"
+                    id="mark"
+                    name="mark"
+                    value={carInfo.mark}
+                    onChange={handleChange}
+                    placeholder="Enter mark"
+                    required
+                  />
+                </div>
 
-        const { name, price, modelName, mark, year, doors, air, transmission, fuel } = carInfo;
-        if (!name || !price || !modelName || !mark || !year || !doors || !air || !transmission || !fuel || !photo) {
-            toast.error("Fill in all fields.");
-            return;
-        }
+                <div className="form-group">
+                  <label htmlFor="modelName">Model Name <b>*</b></label>
+                  <input
+                    type="text"
+                    id="modelName"
+                    name="modelName"
+                    value={carInfo.modelName}
+                    onChange={handleChange}
+                    placeholder="Enter model name"
+                    required
+                  />
+                </div>
+              </div>
 
-        setIsLoading(true);
-        try {
-            const formData = new FormData();
-            formData.append('name', name);
-            formData.append('price', price);
-            formData.append('modelName', modelName);
-            formData.append('mark', mark);
-            formData.append('year', year);
-            formData.append('doors', doors);
-            formData.append('air', air);
-            formData.append('transmission', transmission);
-            formData.append('fuel', fuel);
-            formData.append('img', photo);
+              {/* Row 2 */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="year">Year <b>*</b></label>
+                  <input
+                    type="number"
+                    id="year"
+                    name="year"
+                    value={carInfo.year}
+                    onChange={handleChange}
+                    placeholder="Enter year"
+                    required
+                  />
+                </div>
 
-            await axios.post(`${process.env.REACT_APP_BASE_URL}cars/register`, formData, { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' } });
+                <div className="form-group">
+                  <label htmlFor="color">Color <b>*</b></label>
+                  <input
+                    type="text"
+                    id="color"
+                    name="color"
+                    value={carInfo.color}
+                    onChange={handleChange}
+                    placeholder="Enter color"
+                    required
+                  />
+                </div>
 
-            setCarInfo({
-                modelName: '',
-                year: '',
-                color: '',
-                price: '',
-                mileage: '',
-                name: '',
-                doors: '',
-                air: '',
-                transmission: '',
-                fuel: '',
-            });
-            setPhoto(null);
-            toast.success("Car registered successfully.");
-            navigate('/');
-        } catch (err) {
-            toast.error("An error occurred.");
-            console.log(err);
-        }
-        setIsLoading(false);
-    };
+                <div className="form-group">
+                  <label htmlFor="price">Price <b>*</b></label>
+                  <input
+                    type="number"
+                    id="price"
+                    name="price"
+                    value={carInfo.price}
+                    onChange={handleChange}
+                    placeholder="Enter price"
+                    required
+                  />
+                </div>
+              </div>
 
+              {/* Row 3 */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="mileage">Mileage <b>*</b></label>
+                  <input
+                    type="number"
+                    id="mileage"
+                    name="mileage"
+                    value={carInfo.mileage}
+                    onChange={handleChange}
+                    placeholder="Enter mileage"
+                    required
+                  />
+                </div>
 
-    const styles = {
-        container: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '100vh',
-            backgroundColor: '#f0f0f0',
-            fontFamily: 'Arial, sans-serif',
-        },
-        formContainer: {
-            backgroundColor: '#fff',
-            padding: '40px',
-            borderRadius: '8px',
-            boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-            width: '100%',
-            maxWidth: '800px',
-            margin: ' 20px',
-            display: 'grid',
-            gridTemplateColumns: '1fr 1fr', // Two columns for larger screens
-            gap: '20px',
-        },
-        title: {
-            textAlign: 'center',
-            marginBottom: '30px',
-            fontSize: '35px',
-        },
-        formGroup: {
-            marginBottom: '20px',
-            display: 'flex',
-            flexDirection: 'column',
-        },
-        label: {
-            marginBottom: '10px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-        },
-        input: {
-            padding: '12px',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            fontSize: '16px',
-            marginTop: '5px',
-            width: '100%',
-        },
-        uploadArea: {
-            border: '2px dashed #ccc',
-            borderRadius: '4px',
-            padding: '20px',
-            textAlign: 'center',
-            cursor: 'pointer',
-            minHeight: '100px',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gridColumn: 'span 2',
-        },
-        uploadIcon: {
-            fontSize: '24px',
-            marginBottom: '10px',
-        },
-        uploadedPhoto: {
-            maxWidth: '100%',
-            maxHeight: '200px',
-            marginTop: '10px',
-            borderRadius: '4px',
-        },
-        buttonContainer: {
-            gridColumn: 'span 2',
-            textAlign: 'center',
-        },
-        button: {
-            width: '100%',
-            padding: '12px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '16px',
-            marginTop: '10px',
-        },
-        '@media (max-width: 768px)': {
-            formContainer: {
-                gridTemplateColumns: '1fr',
-                padding: '20px',
-            },
-            title: {
-                fontSize: '28px',
-            },
-            button: {
-                fontSize: '16px',
-            },
-        },
-    };
+                <div className="form-group">
+                  <label htmlFor="doors">Doors <b>*</b></label>
+                  <input
+                    type="text"
+                    id="doors"
+                    name="doors"
+                    value={carInfo.doors}
+                    onChange={handleChange}
+                    placeholder="Enter doors"
+                    required
+                  />
+                </div>
 
-    if (isLoading) return <Loader />;
-    return (
-        <div>
-            <HeroPages name="Add Car" />
-            <div style={styles.container}>
-                <form onSubmit={handleSubmit} style={styles.formContainer} className="add-car-form">
-                    <div>
-                        {['name', 'year', 'color', 'price', 'mark'].map((field) => (
-                            <div className="form-group" style={styles.formGroup} key={field}>
-                                <label htmlFor={field} style={styles.label}>
-                                    {field.charAt(0).toUpperCase() + field.slice(1)}
-                                </label>
-                                <input
-                                    type={field === 'year' || field === 'price' ? 'number' : 'text'}
-                                    id={field}
-                                    name={field}
-                                    value={carInfo[field]}
-                                    onChange={handleChange}
-                                    required
-                                    style={styles.input}
-                                />
-                            </div>
-                        ))}
-                    </div>
-                    <div>
-                        <div className="form-group" style={styles.formGroup}>
-                            <label htmlFor="modelName" style={styles.label}>Model Name</label>
-                            <input
-                                type="text"
-                                id="modelName"
-                                name="modelName"
-                                value={carInfo.modelName}
-                                onChange={handleChange}
-                                style={styles.input}
-                            />
-                        </div>
-                        <div className="form-group" style={styles.formGroup}>
-                            <label htmlFor="doors" style={styles.label}>Doors</label>
-                            <input
-                                type="text"
-                                id="doors"
-                                name="doors"
-                                value={carInfo.doors}
-                                onChange={handleChange}
-                                style={styles.input}
-                            />
-                        </div>
-                        <div className="form-group" style={styles.formGroup}>
-                            <label htmlFor="air" style={styles.label}>Air</label>
-                            <input
-                                type="text"
-                                id="air"
-                                name="air"
-                                value={carInfo.air}
-                                onChange={handleChange}
-                                style={styles.input}
-                            />
-                        </div>
-                        <div className="form-group" style={styles.formGroup}>
-                            <label htmlFor="transmission" style={styles.label}>Transmission</label>
-                            <input
-                                type="text"
-                                id="transmission"
-                                name="transmission"
-                                value={carInfo.transmission}
-                                onChange={handleChange}
-                                style={styles.input}
-                            />
-                        </div>
-                        <div className="form-group" style={styles.formGroup}>
-                            <label htmlFor="fuel" style={styles.label}>Fuel</label>
-                            <input
-                                type="text"
-                                id="fuel"
-                                name="fuel"
-                                value={carInfo.fuel}
-                                onChange={handleChange}
-                                style={styles.input}
-                            />
-                        </div>
-                    </div>
+                <div className="form-group">
+                  <label htmlFor="air">Air <b>*</b></label>
+                  <input
+                    type="text"
+                    id="air"
+                    name="air"
+                    value={carInfo.air}
+                    onChange={handleChange}
+                    placeholder="Enter air"
+                    required
+                  />
+                </div>
+              </div>
 
-                    <div style={styles.uploadArea}>
-                        <label htmlFor="photo" style={{ marginBottom: '10px' }}>
-                            {photo ? 'Photo Uploaded' : 'Drag & Drop or Click to Upload Photo'}
-                        </label>
-                        <input
-                            type="file"
-                            id="photo"
-                            name="photo"
-                            accept="image/*"
-                            onChange={handlePhotoUpload}
-                            style={{ display: 'none' }}
-                        />
-                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                            <label htmlFor="photo" style={{ cursor: 'pointer' }}>
-                                <FaCloudUploadAlt style={styles.uploadIcon} />
-                            </label>
-                            {photo && (
-                                <img src={URL.createObjectURL(photo)} alt="Uploaded" style={styles.uploadedPhoto} />
-                            )}
-                        </div>
-                    </div>
-                    <div style={styles.buttonContainer}>
-                        <button type="submit" style={styles.button}>Add Car</button>
-                    </div>
-                </form>
-            </div>
-            <ToastContainer />
+              {/* Row 4 */}
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="transmission">Transmission <b>*</b></label>
+                  <input
+                    type="text"
+                    id="transmission"
+                    name="transmission"
+                    value={carInfo.transmission}
+                    onChange={handleChange}
+                    placeholder="Enter transmission"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="fuel">Fuel <b>*</b></label>
+                  <input
+                    type="text"
+                    id="fuel"
+                    name="fuel"
+                    value={carInfo.fuel}
+                    onChange={handleChange}
+                    placeholder="Enter fuel"
+                    required
+                  />
+                </div>
+
+                {/* Empty div for alignment */}
+                <div className="form-group" style={{ visibility: "hidden" }}></div>
+              </div>
+
+              {/* Upload photo alone row */}
+              <div className="form-row">
+                <div className="form-group" style={{ flex: "1 1 100%" }}>
+                  <label htmlFor="photo">Upload Car Image <b>*</b></label>
+                  <input
+                    type="file"
+                    id="photo"
+                    accept="image/*"
+                    onChange={handlePhotoUpload}
+                    required
+                  />
+                  {photo && (
+                    <img
+                      src={URL.createObjectURL(photo)}
+                      alt="Preview"
+                      style={{ maxWidth: '100%', marginTop: '10px' }}
+                    />
+                  )}
+                </div>
+              </div>
+
+              <button type="submit">
+                <i className="fa-solid fa-car-side"></i>&nbsp; Add Car
+              </button>
+            </form>
+          </div>
         </div>
-    );
+      </div>
+
+      <div className="book-banner">
+        <div className="book-banner__overlay"></div>
+        <div className="container">
+          <div className="text-content">
+            <h2 style={{ color: "white" }}>List your car by filling out the form above</h2>
+            <span>
+              <i className="fa-solid fa-phone"></i>
+              <h3>(123) 456-7869</h3>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <ToastContainer />
+    </section>
+  );
 };
 
 export default AddCar;
