@@ -108,8 +108,8 @@ const Login = () => {
       </section>
 
       <ToastContainer position="bottom-left" />
-      {loading && <Loader />}
-      <Footer />
+      {loading && <Loader/>}
+     
     </>
   );
 };
