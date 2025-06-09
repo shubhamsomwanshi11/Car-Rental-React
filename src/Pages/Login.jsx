@@ -1,35 +1,32 @@
-import React, { useState } from 'react';
-// Import the mock authentication function
-import { ToastContainer, toast } from 'react-toastify'; // Assuming you have ToastContainer imported
-import 'react-toastify/dist/ReactToastify.css'; // Import the CSS for ToastContainer
+import React, { useState, useContext } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { userContext } from '../context/userContext'
+import 'react-toastify/dist/ReactToastify.css';
+import { userContext } from '../context/userContext';
 import axios from 'axios';
-import Loader from '../components/Loader'
+import HeroPages from '../components/HeroPages';
+import Footer from '../components/Footer';
+import Loader from '../components/Loader';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { setCurrentUser } = useContext(userContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { setCurrentUser } = useContext(userContext);
-
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     try {
-      const userData = { email: email, password: password };
+      const userData = { email, password };
       const response = await axios.post(`${process.env.REACT_APP_BASE_URL}users/login`, userData);
       const user = response.data;
 
       if (response.status === 200 && user) {
         setCurrentUser(user);
         toast.success("Login Successful");
-        setTimeout(() => {
-          navigate('/');
-        }, 2000);
+        setTimeout(() => navigate('/'), 2000);
       } else {
         toast.error("Invalid Credentials");
       }
@@ -39,88 +36,81 @@ const Login = () => {
     setLoading(false);
   };
 
-  const styles = {
-    container: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      height: '100vh',
-      backgroundColor: '#f0f0f0',
-      fontFamily: 'Arial, sans-serif',
-    },
-    loginContainer: {
-      backgroundColor: '#fff',
-      padding: '40px',
-      borderRadius: '8px',
-      boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-      width: '400px',
-    },
-    title: {
-      textAlign: 'center',
-      marginBottom: '30px',
-      fontSize: '24px',
-    },
-    formGroup: {
-      marginBottom: '20px',
-    },
-    label: {
-      display: 'block',
-      marginBottom: '10px',
-      fontSize: '16px',
-    },
-    input: {
-      width: '100%',
-      padding: '12px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      fontSize: '16px',
-    },
-    button: {
-      width: '100%',
-      padding: '12px',
-      backgroundColor: '#007bff',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      fontSize: '18px',
-    },
-  };
-  // if (loading) return <Loader />
   return (
-    <div style={styles.container}>
-      <div style={styles.loginContainer}>
-        <h2 style={styles.title}>Login</h2>
-        <form onSubmit={handleSubmit} className="login-form">
-          <div className="form-group" style={styles.formGroup}>
-            <label htmlFor="email" style={styles.label}>Email address</label>
-            <input
-              type="email"
-              className="form-control"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              style={styles.input}
-            />
-          </div>
-          <div className="form-group" style={styles.formGroup}>
-            <label htmlFor="password" style={styles.label}>Password</label>
-            <input
-              type="password"
-              className="form-control"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              style={styles.input}
-            />
-          </div>
-          <button type="submit" style={styles.button}>Login</button>
-        </form>
-        <p style={{paddingTop:'12px',textAlign:'center'}}>Don't have an account ? <a style={{color:'green'}} href="/register">Register</a></p>
-      </div>
-      <ToastContainer position="bottom-left" />
+    <>
+      <section className="contact-page">
+        <HeroPages name="Login" />
+        <div className="container">
+          <div className="contact-div">
+            <div className="contact-div__text">
+              <h2>Welcome Back!</h2>
+              <p>
+                Enter your credentials to log into your account and continue your journey.
+              </p>
+              <a href="/">
+                <i className="fa-solid fa-phone"></i>&nbsp; (123) 456-7869
+              </a>
+              <a href="/">
+                <i className="fa-solid fa-envelope"></i>&nbsp; support@carrental.com
+              </a>
+              <a href="/">
+                <i className="fa-solid fa-location-dot"></i>&nbsp; Belgrade, Serbia
+              </a>
+            </div>
+            <div className="contact-div__form">
+              <form onSubmit={handleSubmit}>
+                <label>
+                  Email <b>*</b>
+                </label>
+                <input
+                  type="email"
+                  placeholder="youremail@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
 
-    </div>
+                <label>
+                  Password <b>*</b>
+                </label>
+                <input
+                  type="password"
+                  placeholder="Enter password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+
+                <button type="submit">
+                  <i className="fa-solid fa-right-to-bracket"></i>&nbsp; Login
+                </button>
+              </form>
+              <p style={{ marginTop: '1rem', textAlign: 'center' }}>
+                Don't have an account?{' '}
+                <a href="/register" style={{ color: 'green' }}>Register</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="book-banner">
+          <div className="book-banner__overlay"></div>
+          <div className="container">
+            <div className="text-content">
+              <h2 style={{ color: 'white' }}>Need Help?</h2>
+              <span>
+                <i className="fa-solid fa-phone"></i>
+                <h3>(123) 456-7869</h3>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <ToastContainer position="bottom-left" />
+      {loading && <Loader />}
+      <Footer />
+    </>
   );
 };
 
