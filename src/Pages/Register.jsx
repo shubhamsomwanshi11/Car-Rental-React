@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Loader from '../components/Loader';
-
+import HeroPages from "../components/HeroPages";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -104,7 +104,6 @@ const Register = () => {
     }
   };
 
-
   const sendOTP = async (e) => {
     e.preventDefault();
     const response = await axios.post(`${process.env.REACT_APP_BASE_URL}email/sendOTP`, { email: formData.email });
@@ -119,100 +118,6 @@ const Register = () => {
 
   const handleBack = () => {
     setStep(1);
-  };
-
-  const styles = {
-    container: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh',
-      backgroundColor: '#f0f0f0',
-      fontFamily: 'Arial, sans-serif',
-    },
-    registerContainer: {
-      backgroundColor: '#fff',
-      padding: '40px',
-      borderRadius: '8px',
-      boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-      width: '100%',
-      maxWidth: '500px',
-      margin: '120px 20px',
-
-    },
-    title: {
-      textAlign: 'center',
-      marginBottom: '30px',
-      fontSize: '35px',
-    },
-    formGroup: {
-      marginBottom: '20px',
-    },
-    label: {
-      display: 'block',
-      marginBottom: '10px',
-      fontSize: '16px',
-    },
-    input: {
-      width: '100%',
-      padding: '12px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-      fontSize: '16px',
-    },
-    error: {
-      color: 'red',
-      fontSize: '14px',
-      marginTop: '5px',
-    },
-    button: {
-      width: '100%',
-      padding: '12px',
-      backgroundColor: '#007bff',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      fontSize: '18px',
-      marginTop: '10px',
-    },
-    buttonV: {
-      width: '50%',
-      marginLeft: '10px',
-      marginTop: '30px',
-      height: '45px',
-      backgroundColor: '#007bff',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      fontSize: '18px'
-    },
-    buttonSecondary: {
-      width: '100%',
-      padding: '12px',
-      backgroundColor: '#6c757d',
-      color: 'white',
-      border: 'none',
-      borderRadius: '4px',
-      cursor: 'pointer',
-      fontSize: '18px',
-      marginTop: '10px',
-    },
-    '@media (max-width: 768px)': {
-      registerContainer: {
-        padding: '20px',
-      },
-      title: {
-        fontSize: '28px',
-      },
-      button: {
-        fontSize: '16px',
-      },
-      buttonSecondary: {
-        fontSize: '16px',
-      },
-    },
   };
 
   const registerUser = async (e) => {
@@ -253,116 +158,296 @@ const Register = () => {
   };
 
   if (isLoading) return <Loader />
+
   return (
-    <div style={styles.container}>
-      <div style={styles.registerContainer}>
-        <h2 style={styles.title}>Register</h2>
-        <form onSubmit={handleSubmit}>
-          {step === 1 && (
-            <>
-              {['name', 'email'].map((field) => (
-                <div className="form-group" style={styles.formGroup} key={field}>
-                  <label htmlFor={field} style={styles.label}>
-                    {field.charAt(0).toUpperCase() + field.slice(1)}
-                  </label>
-                  <input
-                    type="text"
-                    id={field}
-                    name={field}
-                    value={formData[field]}
-                    onChange={handleChange}
-                    style={styles.input}
-                    disabled={field === 'email' && verified} // Disable email field if verified is true
-                  />
-                  {errors[field] && <p style={styles.error}>{errors[field]}</p>}
-                </div>
-              ))}
+    <section className="contact-page">
+      <HeroPages name="Register" />
+      <div className="container">
+        <div className="contact-div">
+          <div className="contact-div__text">
+            <h2>Join Our Community</h2>
+            <p>
+              Create your account to access our car rental services. Please provide accurate information for the best experience.
+            </p>
+            <a href="/"><i className="fa-solid fa-phone"></i>&nbsp; (123) 456-7869</a>
+            <a href="/"><i className="fa-solid fa-envelope"></i>&nbsp; support@carrental.com</a>
+            <a href="/"><i className="fa-solid fa-location-dot"></i>&nbsp; Pune, India</a>
+          </div>
 
-              {
-                !showVerify && <button style={{ ...styles.buttonV, marginTop: '0px', marginBottom: '20px' }} onClick={sendOTP} >Verify Mail</button>
-              }
+          <div className="contact-div__form">
+            <form onSubmit={handleSubmit} className="add-car-form">
+              {step === 1 && (
+                <>
+                  {/* Row 1 - Name and Email */}
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="name">Name <b>*</b></label>
+                      <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        placeholder="Enter your name"
+                        required
+                      />
+                      {errors.name && <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{errors.name}</p>}
+                    </div>
 
-              {!verified && showVerify && <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-                <div className='form-group'>
-                  <label style={styles.label}>
-                    Enter OTP :
-                  </label>
-                  <input
-                    type="text"
-                    style={styles.input}
-                    onChange={(e) => setOTP(e.target.value)}
-                    placeholder="Enter OTP"
-                  />
-                </div>
-                <button style={styles.buttonV} onClick={handleMailVerification} >Verify Mail</button>
-              </div>}
+                    <div className="form-group">
+                      <label htmlFor="email">Email <b>*</b></label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        placeholder="Enter your email"
+                        disabled={verified}
+                        required
+                      />
+                      {errors.email && <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{errors.email}</p>}
+                    </div>
 
-              {['mobile', 'age'].map((field) => (
-                <div className="form-group" style={styles.formGroup} key={field}>
-                  <label htmlFor={field} style={styles.label}>
-                    {field.charAt(0).toUpperCase() + field.slice(1)}
-                  </label>
-                  <input
-                    type={field === 'age' ? 'number' : 'text'}
-                    id={field}
-                    name={field}
-                    value={formData[field]}
-                    onChange={handleChange}
-                    style={styles.input}
-                  />
-                  {errors[field] && <p style={styles.error}>{errors[field]}</p>}
-                </div>
-              ))}
-              {verified && <button type="button" style={styles.button} onClick={handleNext}>
-                Next
-              </button>}
-            </>
-          )}
-          {step === 2 && (
-            <>
-              {['address', 'password', 'password2'].map((field) => (
-                <div className="form-group" style={styles.formGroup} key={field}>
-                  <label htmlFor={field} style={styles.label}>
-                    {field == 'password2' ? ' Confirm Password' : field.charAt(0).toUpperCase() + field.slice(1)}
-                  </label>
-                  <input
-                    type={field === 'address' ? 'text' : 'password'}
-                    id={field}
-                    name={field}
-                    value={formData[field]}
-                    onChange={handleChange}
-                    style={styles.input}
-                  />
-                  {field === 'age' && errors.age && <p style={styles.error}>{errors.age}</p>}
-                </div>
-              ))}
-              <div className="form-group" style={styles.formGroup}>
-                <label htmlFor="avatar" style={styles.label}>Avatar</label>
-                <input
-                  type="file"
-                  className="form-control"
-                  id="avatar"
-                  name="avatar"
-                  onChange={handleChange}
-                  style={styles.input}
-                />
-                {errors.avatar && <p style={styles.error}>{errors.avatar}</p>}
-              </div>
+                    {/* Email Verification Button */}
+                    <div className="form-group">
+                      {!showVerify && (
+                        <button 
+                          type="button"
+                          onClick={sendOTP}
+                          style={{
+                            padding: '10px 20px',
+                            backgroundColor: '#007bff',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            marginTop: '25px'
+                          }}
+                        >
+                          Verify Email
+                        </button>
+                      )}
+                    </div>
+                  </div>
 
-              <button type="button" style={styles.buttonSecondary} onClick={handleBack}>
-                Back
-              </button>
-              <button type="submit" style={styles.button} onClick={registerUser}>
-                Register
-              </button>
-            </>
-          )}
-        </form>
-        <p style={{ paddingTop: '12px', textAlign: 'center' }}>Already have an account ? <a style={{ color: 'green' }} href="/login">Login</a></p>
+                  {/* OTP Verification Row */}
+                  {!verified && showVerify && (
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="otp">Enter OTP <b>*</b></label>
+                        <input
+                          type="text"
+                          id="otp"
+                          onChange={(e) => setOTP(e.target.value)}
+                          placeholder="Enter OTP"
+                          required
+                        />
+                      </div>
+
+                      <div className="form-group">
+                        <button 
+                          type="button"
+                          onClick={handleMailVerification}
+                          style={{
+                            padding: '10px 20px',
+                            backgroundColor: '#28a745',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '14px',
+                            marginTop: '25px'
+                          }}
+                        >
+                          Verify OTP
+                        </button>
+                      </div>
+
+                      {/* Empty div for alignment */}
+                      <div className="form-group" style={{ visibility: "hidden" }}></div>
+                    </div>
+                  )}
+
+                  {/* Row 2 - Mobile and Age */}
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="mobile">Mobile <b>*</b></label>
+                      <input
+                        type="tel"
+                        id="mobile"
+                        name="mobile"
+                        value={formData.mobile}
+                        onChange={handleChange}
+                        placeholder="Enter your mobile number"
+                        required
+                      />
+                      {errors.mobile && <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{errors.mobile}</p>}
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="age">Age <b>*</b></label>
+                      <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        value={formData.age}
+                        onChange={handleChange}
+                        placeholder="Enter your age"
+                        required
+                      />
+                      {errors.age && <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{errors.age}</p>}
+                    </div>
+
+                    {/* Empty div for alignment */}
+                    <div className="form-group" style={{ visibility: "hidden" }}></div>
+                  </div>
+
+                  {verified && (
+                    <button type="button" onClick={handleNext}>
+                      <i className="fa-solid fa-arrow-right"></i>&nbsp; Next Step
+                    </button>
+                  )}
+                </>
+              )}
+
+              {step === 2 && (
+                <>
+                  {/* Row 1 - Address */}
+                  <div className="form-row">
+                    <div className="form-group" style={{ flex: "1 1 100%" }}>
+                      <label htmlFor="address">Address <b>*</b></label>
+                      <input
+                        type="text"
+                        id="address"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        placeholder="Enter your address"
+                        required
+                      />
+                      {errors.address && <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{errors.address}</p>}
+                    </div>
+                  </div>
+
+                  {/* Row 2 - Password and Confirm Password */}
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="password">Password <b>*</b></label>
+                      <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        placeholder="Enter your password"
+                        required
+                      />
+                      {errors.password && <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{errors.password}</p>}
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="password2">Confirm Password <b>*</b></label>
+                      <input
+                        type="password"
+                        id="password2"
+                        name="password2"
+                        value={formData.password2}
+                        onChange={handleChange}
+                        placeholder="Confirm your password"
+                        required
+                      />
+                      {errors.password2 && <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{errors.password2}</p>}
+                    </div>
+
+                    {/* Empty div for alignment */}
+                    <div className="form-group" style={{ visibility: "hidden" }}></div>
+                  </div>
+
+                  {/* Row 3 - Avatar Upload */}
+                  <div className="form-row">
+                    <div className="form-group" style={{ flex: "1 1 100%" }}>
+                      <label htmlFor="avatar">Profile Picture</label>
+                      <input
+                        type="file"
+                        id="avatar"
+                        name="avatar"
+                        onChange={handleChange}
+                        accept="image/jpeg,image/png"
+                      />
+                      {errors.avatar && <p style={{ color: 'red', fontSize: '14px', marginTop: '5px' }}>{errors.avatar}</p>}
+                      {formData.avatar && (
+                        <img
+                          src={URL.createObjectURL(formData.avatar)}
+                          alt="Avatar Preview"
+                          style={{ maxWidth: '100px', marginTop: '10px', borderRadius: '8px' }}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                    <button 
+                      type="button" 
+                      onClick={handleBack}
+                      style={{
+                        flex: '1',
+                        padding: '12px',
+                        backgroundColor: '#6c757d',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '16px'
+                      }}
+                    >
+                      <i className="fa-solid fa-arrow-left"></i>&nbsp; Back
+                    </button>
+                    <button 
+                      type="submit" 
+                      onClick={registerUser}
+                      style={{
+                        flex: '2',
+                        padding: '12px',
+                        backgroundColor: '#007bff',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '16px'
+                      }}
+                    >
+                      <i className="fa-solid fa-user-plus"></i>&nbsp; Complete Registration
+                    </button>
+                  </div>
+                </>
+              )}
+            </form>
+
+            <p style={{ paddingTop: '20px', textAlign: 'center', fontSize: '16px' }}>
+              Already have an account? <a style={{ color: '#007bff', textDecoration: 'none' }} href="/login">Login here</a>
+            </p>
+          </div>
+        </div>
       </div>
-      <ToastContainer />
 
-    </div >
+      <div className="book-banner">
+        <div className="book-banner__overlay"></div>
+        <div className="container">
+          <div className="text-content">
+            <h2 style={{ color: "white" }}>Join us today and start your journey</h2>
+            <span>
+              <i className="fa-solid fa-phone"></i>
+              <h3>(123) 456-7869</h3>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <ToastContainer />
+    </section>
   );
 };
 
